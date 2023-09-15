@@ -22,4 +22,12 @@ public class User {
     private String password;
     @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
+    private Double height;
+    @Column(nullable = false)
+    private Double weight;
+    @Column(nullable = false)
+    private String biotype;
+    @Column(nullable = false)
+    private String objective;
 }
