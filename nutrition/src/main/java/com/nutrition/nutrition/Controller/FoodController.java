@@ -10,10 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +33,24 @@ public class FoodController {
         return ResponseEntity.status(HttpStatus.CREATED).body(foodService.save(food));
     }
 
-    public Optional<Food> findById(Integer integer) {
-        return foodService.findById(integer);
+    @GetMapping("/{code}")
+    public ResponseEntity<Object> findById(@PathVariable(value = "code") Integer code) {
+        Optional<Food> food = foodService.findById(code);
+        if (food.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Food not found");
+        } else {
+            return ResponseEntity.status(HttpStatus.FOUND).body(food);
+        }
     }
 
-    public void deleteById(Integer integer) {
-        foodService.deleteById(integer);
+    @DeleteMapping("/{code}")
+    public ResponseEntity<Object> deleteById(@PathVariable(value = "code") Integer code) {
+        Optional<Food> food = foodService.findById(code);
+        if(food.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Food not found");
+        } else {
+            foodService.deleteById(code);
+            return ResponseEntity.status(HttpStatus.OK).body("Food deleted");
+        }
     }
 }
